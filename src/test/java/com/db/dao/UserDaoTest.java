@@ -1,22 +1,19 @@
 package com.db.dao;
 
 import com.db.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserDaoTest {
-
     @Test
-    void addAndGet() {
-        UserDao userDao = new UserDaoFactory().awsUserDao();
-        String id = "5";
-        //userDao.add(new User(id, "hwan", "password"));
+    void addAndSelect() {
+        UserDao userDao = new UserDao();
+        String id ="10";
+      //  userDao.add(new User(id,"hwan","1234"));
         User user = userDao.findById(id);
-        assertEquals("hwan", user.getName());
-        assertEquals("password", user.getPassword());
+        Assertions.assertEquals("hwan",user.getName());
+
     }
-
-
-
 }
