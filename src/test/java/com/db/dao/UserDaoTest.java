@@ -10,11 +10,11 @@ class UserDaoTest {
     ConnectionMaker connectionMaker = new AwsConnectionMaker();
     @Test
     void addAndSelect() {
-        UserDao userDao = new UserDao(connectionMaker);
-        String id ="10";
+        UserDao userDao = new UserDaoFactory().userDao();
+        String id ="1";
       //  userDao.add(new User(id,"hwan","1234"));
         User user = userDao.findById(id);
-        Assertions.assertEquals("hwan",user.getName());
+        Assertions.assertEquals("jung",user.getName());
 
     }
 }
