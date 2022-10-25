@@ -7,11 +7,10 @@ import java.util.Map;
 
 public class UserDao {
     public void add(User user) {
-        Map<String, String> env = System.getenv();  //환경변수 사용하기 위한 Map
+
         try {
             // DB접속 (ex sql workbeanch실행)
-            Connection c = DriverManager.getConnection(env.get("DB_HOST"),
-                    env.get("DB_USER"), env.get("DB_PASSWORD"));
+            Connection c = getConnection();
 
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
@@ -25,19 +24,16 @@ public class UserDao {
             pstmt.close();
             c.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     public User findById(String id) {
-        Map<String, String> env = System.getenv();
-        Connection c;
+
         try {
             // DB접속 (ex sql workbeanch실행)
-            c = DriverManager.getConnection(env.get("DB_HOST"),
-                    env.get("DB_USER"), env.get("DB_PASSWORD"));
-
+            Connection c = getConnection();
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("SELECT * FROM users WHERE id = ?");
             pstmt.setString(1, id);
@@ -54,7 +50,7 @@ public class UserDao {
 
             return user;
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -62,7 +58,16 @@ public class UserDao {
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
 //        userDao.add();
-        User user = userDao.findById("3");
+        User user = userDao.findById("1");
         System.out.println(user.getName());
     }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+
+        Map<String, String> env = System.getenv();
+        Connection c = DriverManager.getConnection(env.get("DB_HOST"),
+                env.get("DB_USER"), env.get("DB_PASSWORD"));
+        return c;
+    }
+
 }
