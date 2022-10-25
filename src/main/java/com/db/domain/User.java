@@ -35,9 +35,3 @@ public class User {
         this.password = password;
     }
 }
-Footer
-        © 2022 GitHub, Inc.
-        Footer navigation
-        Terms
-        Privacy
-        S
