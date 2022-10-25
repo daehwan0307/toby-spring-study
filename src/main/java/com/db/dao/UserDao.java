@@ -7,6 +7,10 @@ import java.sql.*;
 import java.util.Map;
 
 public class UserDao {
+    private ConnectionMaker connectionMaker;
+    public UserDao(ConnectionMaker connectionMaker){
+        this.connectionMaker = connectionMaker;
+    }
     private Connection makeConnection() throws SQLException {
         Map<String, String> env = System.getenv();
         Connection c = DriverManager.getConnection(env.get("DB_HOST"),
@@ -66,7 +70,8 @@ public class UserDao {
     }
 
     public static void main(String[] args) {
-        UserDao userDao = new UserDao();
+        ConnectionMaker connectionMaker = new AwsConnectionMaker();
+        UserDao userDao = new UserDao(connectionMaker);
 //        userDao.add();
         User user = userDao.findById("1");
         System.out.println(user.getName());
