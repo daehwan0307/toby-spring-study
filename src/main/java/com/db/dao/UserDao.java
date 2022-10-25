@@ -6,11 +6,15 @@ import java.sql.*;
 import java.util.Map;
 
 public class UserDao {
+    private ConnectionMaker connectionMaker;
+    public UserDao(){
+        connectionMaker = new ConnectionMaker();
+    }
     public void add(User user) {
 
         try {
             // DB접속 (ex sql workbeanch실행)
-            Connection c = getConnection();
+            Connection c = connectionMaker.getConnection();
 
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
@@ -33,7 +37,7 @@ public class UserDao {
 
         try {
             // DB접속 (ex sql workbeanch실행)
-            Connection c = getConnection();
+            Connection c = connectionMaker.getConnection();
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("SELECT * FROM users WHERE id = ?");
             pstmt.setString(1, id);
@@ -58,16 +62,10 @@ public class UserDao {
     public static void main(String[] args) {
         UserDao userDao = new UserDao();
 //        userDao.add();
-        User user = userDao.findById("1");
+        User user = userDao.findById("2");
         System.out.println(user.getName());
     }
 
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
 
-        Map<String, String> env = System.getenv();
-        Connection c = DriverManager.getConnection(env.get("DB_HOST"),
-                env.get("DB_USER"), env.get("DB_PASSWORD"));
-        return c;
-    }
 
 }
