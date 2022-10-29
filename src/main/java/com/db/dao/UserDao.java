@@ -40,7 +40,7 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
-    public void delete() {
+    public void deleteAll() {
        Connection c;
        try{
            c=makeConnection();
