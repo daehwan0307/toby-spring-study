@@ -9,51 +9,51 @@ import java.util.Map;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
-    public UserDao(ConnectionMaker connectionMaker){
+
+    public UserDao(ConnectionMaker connectionMaker) {
 
         this.connectionMaker = connectionMaker;
     }
 
-    public void add(User user) {
+    public void jdbcContextWithStatementStrategy(StatementStrategy st) {
 
+        Connection c = null;
+        PreparedStatement ps = null;
 
         try {
-            // DB접속 (ex sql workbeanch실행)
-          Connection c = connectionMaker.getConnection();
-
-            // Query문 작성
-            PreparedStatement pstmt = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
-            pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getPassword());
-
-            // Query문 실행
-            pstmt.executeUpdate();
-
-            pstmt.close();
-            c.close();
-
+            c = connectionMaker.getConnection();
+            ps = st.getStatement(c);
+            ps.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
     }
+
+
+
+
+    public void add(User user) {
+
+        jdbcContextWithStatementStrategy(new AddStrategy(user));
+
+    }
     public void deleteAll() {
-
-       try{
-           Connection c = connectionMaker.getConnection();
-
-           PreparedStatement pstmt = c.prepareStatement("DELETE FROM  users");
-
-           pstmt.executeUpdate();
-           pstmt.close();
-           c.close();
-       } catch (SQLException e) {
-           throw new RuntimeException(e);
-       } catch (ClassNotFoundException e) {
-           throw new RuntimeException(e);
-       }
+        jdbcContextWithStatementStrategy(new DeleteAllStrategy());
     }
 
     public User get(String id) {
@@ -87,8 +87,6 @@ public class UserDao {
             return user;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
