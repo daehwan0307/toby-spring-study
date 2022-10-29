@@ -1,9 +1,11 @@
 package com.db.dao;
 
 public class UserDaoFactory {
-    public UserDao userDao(){
-        ConnectionMaker connectionMaker = new AwsConnectionMaker();
-        UserDao userDao = new UserDao(connectionMaker);
-        return userDao;
+    public UserDao awsUserDao(){  //awsUserDao를
+        return new UserDao(new AwsConnectionMaker());
     }
+
+   // public UserDao localUserDao(){
+   //     return new UserDao(new LocalConnectionMaker());
+    // }
 }
