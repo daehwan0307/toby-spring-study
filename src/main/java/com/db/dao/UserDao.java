@@ -68,9 +68,12 @@ public class UserDao {
 
             // Query문 실행
             ResultSet rs = pstmt.executeQuery();
-            rs.next();
-            User user = new User(rs.getString("id"), rs.getString("name"),
-                    rs.getString("password"));
+            User user = null;
+            if(rs.next()){
+                 user = new User(rs.getString("id"), rs.getString("name"),
+                        rs.getString("password"));
+            }
+
 
             rs.close();
             pstmt.close();
@@ -93,6 +96,9 @@ public class UserDao {
         rs.next();
 
         int cnt = rs.getInt(1);
+        rs.close();
+        ps.close();
+        c.close();
 
         return cnt;
     }
