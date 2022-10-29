@@ -11,18 +11,18 @@ public class UserDao {
     public UserDao(ConnectionMaker connectionMaker){
         this.connectionMaker = connectionMaker;
     }
-    private Connection makeConnection() throws SQLException {
+    private Connection getConnection() throws SQLException {
         Map<String, String> env = System.getenv();
         Connection c = DriverManager.getConnection(env.get("DB_HOST"),
                 env.get("DB_USER"), env.get("DB_PASSWORD"));
         return c;
     }
     public void add(User user) {
-        Map<String, String> env = System.getenv();
+
         Connection c;
         try {
             // DB접속 (ex sql workbeanch실행)
-          c=makeConnection();
+          c=getConnection();
 
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
@@ -43,7 +43,7 @@ public class UserDao {
     public void deleteAll() {
        Connection c;
        try{
-           c=makeConnection();
+           c=getConnection();
 
            PreparedStatement pstmt = c.prepareStatement("DELETE FROM  users");
 
@@ -56,11 +56,11 @@ public class UserDao {
     }
 
     public User get(String id) {
-        Map<String, String> env = System.getenv();
+
         Connection c;
         try {
             // DB접속 (ex sql workbeanch실행)
-            c=makeConnection();
+            c=getConnection();
 
             // Query문 작성
             PreparedStatement pstmt = c.prepareStatement("SELECT * FROM users WHERE id = ?");
