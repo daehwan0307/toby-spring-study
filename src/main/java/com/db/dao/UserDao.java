@@ -84,6 +84,18 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
+    public int getCount() throws SQLException, ClassNotFoundException {
+        Connection c = connectionMaker.getConnection();
+
+        PreparedStatement ps = c.prepareStatement("SELECT count(*) FROM users");
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+
+        int cnt = rs.getInt(1);
+
+        return cnt;
+    }
 
     public static void main(String[] args) {
         ConnectionMaker connectionMaker = new AwsConnectionMaker();
