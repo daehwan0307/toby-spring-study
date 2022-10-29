@@ -4,11 +4,18 @@ import com.db.domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Map;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
+
+    private DataSource dataSource;
+
+    public UserDao(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
 
     public UserDao(ConnectionMaker connectionMaker) {
 
@@ -21,7 +28,7 @@ public class UserDao {
         PreparedStatement ps = null;
 
         try {
-            c = connectionMaker.getConnection();
+            c = dataSource.getConnection();
             ps = st.getStatement(c);
             ps.executeUpdate();
         } catch (SQLException e) {

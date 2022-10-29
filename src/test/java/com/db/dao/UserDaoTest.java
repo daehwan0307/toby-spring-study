@@ -47,7 +47,7 @@ class UserDaoTest {
         //UserDao userDao = udf.awsUserDao();  //팩토리를 사용한 userdao 생성
 
         UserDao userDao = context.getBean("awsUserDao",UserDao.class); //spring기능
-        //userDao.add(user4);
+        userDao.add(user4);
         User user = userDao.get("4");
         assertThrows(EmptyResultDataAccessException.class,()-> {
                     userDao.get("6");
