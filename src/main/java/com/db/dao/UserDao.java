@@ -60,7 +60,14 @@ public class UserDao {
 
     }
     public void deleteAll() {
-        jdbcContextWithStatementStrategy(new DeleteAllStrategy());
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement getStatement(Connection c) throws SQLException {
+
+                PreparedStatement ps =c.prepareStatement("DELETE FROM users");
+                return ps;
+            }
+        });
     }
 
     public User get(String id) {
