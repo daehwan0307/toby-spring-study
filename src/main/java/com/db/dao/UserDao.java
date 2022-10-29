@@ -1,6 +1,7 @@
 package com.db.dao;
 
 import com.db.domain.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 
 import java.sql.*;
@@ -78,6 +79,10 @@ public class UserDao {
             rs.close();
             pstmt.close();
             c.close();
+            if(user == null){
+                throw new EmptyResultDataAccessException(1);
+            }
+
 
             return user;
 

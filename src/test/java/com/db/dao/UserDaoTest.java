@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -44,8 +45,12 @@ class UserDaoTest {
         //UserDao userDao = udf.awsUserDao();  //팩토리를 사용한 userdao 생성
 
         UserDao userDao = context.getBean("awsUserDao",UserDao.class); //spring기능
-        userDao.add(user2);
+        //userDao.add(user2);
         User user = userDao.get("1");
+        assertThrows(EmptyResultDataAccessException.class,()-> {
+                    userDao.get("4");
+
+                });
         assertEquals("hwan",user.getName());
 
     }
@@ -53,7 +58,7 @@ class UserDaoTest {
     @Test
     void getCount() throws SQLException, ClassNotFoundException {
 
-        assertEquals(0,userDao.getCount());
+        assertEquals(2,userDao.getCount());
 
 
 
