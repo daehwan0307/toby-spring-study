@@ -40,8 +40,22 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
+    public void delete() {
+       Connection c;
+       try{
+           c=makeConnection();
 
-    public User findById(String id) {
+           PreparedStatement pstmt = c.prepareStatement("DELETE FROM  users");
+
+           pstmt.executeUpdate();
+           pstmt.close();
+           c.close();
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
+    }
+
+    public User get(String id) {
         Map<String, String> env = System.getenv();
         Connection c;
         try {
@@ -73,7 +87,7 @@ public class UserDao {
         ConnectionMaker connectionMaker = new AwsConnectionMaker();
         UserDao userDao = new UserDao(connectionMaker);
 //        userDao.add();
-        User user = userDao.findById("1");
+        User user = userDao.get("1");
         System.out.println(user.getName());
     }
 }
