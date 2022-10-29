@@ -56,7 +56,16 @@ public class UserDao {
 
     public void add(User user) {
 
-        jdbcContextWithStatementStrategy(new AddStrategy(user));
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement getStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement("INSERT INTO users(id, name, password) VALUES(?,?,?);");
+                ps.setString(1, user.getId());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getPassword());
+                return ps;
+            }
+        });
 
     }
     public void deleteAll() {
